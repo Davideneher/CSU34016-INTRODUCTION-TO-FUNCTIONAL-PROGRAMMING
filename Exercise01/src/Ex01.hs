@@ -1,6 +1,6 @@
 module Ex01 where
 import Data.Char (toUpper)
-import Data.List(group)
+--import Data.List(group)
 
 name, idno, username :: String
 name      =  "Deneher, David"  -- replace with your name
