@@ -1,0 +1,1400 @@
+%% Chapter 1 - Exercises
+%%
+%% author: Peter Urbak
+%% version: 2012-10-04
+
+%% Exercise 1.1
+
+%% Which of the following sequences of characters are atoms, which are variables
+%% and which are neither?
+
+%% 1. vINCENT - atom
+%% 2. Footmassage - variable
+%% 3. variable23 - atom
+%% 4. Variable2000 - variable
+%% 5. big_kahuna_burger - atom
+%% 6. 'big kahuna burger' - atom
+%% 7. big kahuna burger - neither
+%% 8. 'Jules' - atom
+%% 9. _Jules - variable
+%% 10. '_Jules' - atom
+
+%% Exercise 1.2
+
+%% Which of the following sequences of characters are atoms, which are
+%% variables, which are complex terms, and which are not terms at all? Give the
+%% functor and arity of each complex term.
+
+%% loves(Vincent,mia) - complex term, functor: loves, arity: 2
+%% 'loves(Vincent,mia)' - atom
+%% Butch(boxer) - not a term
+%% boxer(Butch) - complex term, functor: boxer, arity: 1
+%% and(big(burger),kahuna(burger)) - complex term, functor: and, arity: 2
+%% and(big(X),kahuna(X)) - complex term, functor: and, arity: 2
+%% _and(big(X),kahuna(X)) - not a term
+%% (Butch kills Vincent) - not a term
+%% kills(Butch Vincent) - not a term
+%% kills(Butch,Vincent - not a term
+
+%% Exercise 1.3
+
+%% How many facts, rules, clauses, and predicates are there in the following
+%% knowledge base? What are the heads of the rules, and what are the goals they
+%% contain?
+
+%% woman(vincent).
+%% woman(mia).
+%% man(jules).
+
+%% person(X) :- man(X); woman(X).
+%% loves(X,Y) :- father(X,Y).
+%% father(Y,Z) :- man(Y), son(Z,Y).
+%% father(Y,Z) :- man(Y), daughter(Z,Y).
+
+%% facts: 3
+%% rules: 4
+%% clauses: 7
+%% predicates: 7
+
+%% The commas in the goals column are not logical `AND`s, they are just
+%% delimiting the separate goals of a rule.
+
+%% |     Head     |         Goals          |
+%% |--------------|------------------------|
+%% | person(X)    | man(X), woman(X)       |
+%% | loves(X, Y)  | father(X, Y)           |
+%% | father(Y, Z) | man(Y), son(Z, Y)      |
+%% | father(Y, Z) | man(Y), daughter(Z, Y) |
+
+%% Exercise 1.4
+
+%% Represent the following in Prolog:
+
+%% 1. Butch is a killer.
+killer(butch).
+
+%% 2. Mia and Marcellus are married.
+married(mia, marcellus).
+
+%% 3. Zed is dead.
+dead(zed).
+
+%% 4. Marcellus kills everyone who gives Mia a footmassage.
+kills(marcellus, X) :- givesFootMassage(X, mia).
+
+%% 5. Mia loves everyone who is a good dancer.
+loves(mia, X) :- goodDancer(X).
+
+%% 6. Jules eats anything that is nutritious or tasty.
+eats(jules, X) :- nutritious(X).
+eats(jules, X) :- tasty(X).
+%% Alternatively,
+eats2(jules, X) :- nutritious(X); tasty(X).
+
+%% Exercise 1.5
+
+%% Suppose we are working with the following knowledge base:
+
+wizard(ron).
+hasWand(harry).
+quidditchPlayer(harry).
+wizard(X) :- hasBroom(X), hasWand(X).
+hasBroom(X) :- quidditchPlayer(X).
+
+%% How does Prolog respond to the following queries?
+
+%% 1. wizard(ron). -> true
+%% 2. witch(ron). -> undefined procedure
+%% 3. wizard(hermione). -> false
+%% 4. witch(hermione). -> undefined procedure
+%% 5. wizard(harry). -> true
+%% 6. wizard(Y). -> Y = ron ; Y = harry.
+%% 7.witch(Y). -> undefined procedure
+
+%% Chapter 2 - Exercises
+
+%% author: Peter Urbak
+%% version: 2012-10-04
+
+%% Exercise 2.1
+
+%% Which of the following pairs of terms unify? Where relevant,
+%% give the variable instantiations that lead to successful unification.
+
+%%  1. bread = bread -> true
+%%  2. 'Bread' = bread -> false
+%%  3. 'bread' = bread -> true
+%%  4. Bread = bread -> Bread = bread.
+%%  5. bread = sausage -> false
+%%  6. food(bread) = bread -> false
+%%  7. food(bread) = X -> X = food(bread).
+%%  8. food(X) = food(bread) -> X = bread.
+%%  9. food(bread, X) = food(Y, sausage) -> X = sausage, Y = bread.
+%% 10. food(bread, X, beer) = food(Y, sausage, X) -> false
+%% 11. food(bread, X, beer) = food(Y, kahuna_burger) -> false
+%% 12. food(X) = X -> X = food(X).
+%% 13. meal(food(bread), drink(beer)) = meal(X,Y) ->
+%%     X = food(bread), Y = drink(beer).
+%% 14. meal(food(bread), X) = meal(X, drink(beer)) -> false
+
+%% Exercise 2.2
+
+%% We are working with the following knowledge base:
+
+house_elf(dobby).
+witch(hermione).
+witch('McGonagall').
+witch(rita_skeeter).
+magic(X) :- house_elf(X).
+magic(X) :- wizard(X).
+magic(X) :- witch(X).
+
+%% Which of the following queries are satisfied? Where relevant, give all the
+%% variable instantiations that lead to success.
+
+%% 1. ?- magic(house_elf). -> false
+%% 2. ?- wizard(harry). -> false
+%% 3. ?- magic(wizard). -> false
+%% 4. ?- magic('McGonagall'). -> true
+%% 5. ?- magic(Hermione). ->
+%%    Hermione = dobby;
+%%    Hermione = hermione;
+%%    Hermione = 'McGonagall';
+%%    Hermione = rita_skeeter.
+
+%% Draw the search tree for the fifth query magic(Hermione).
+
+%%     --------------------------------------------------------------
+%%     |                     ?- magic(Hermione)                     |
+%%     --------------------------------------------------------------
+%%                 /              |                     \
+%% Hermione = _G1 /               | Hermione = _G1       \ Hermione = _G1
+%%               /                |                       \
+%% ---------------------  ------------------        ---------------------------------------
+%% | ?- house_elf(_G1) |  | ?- wizard(_G1) |        |            ?- witch(_G1)            |
+%% ---------------------  ------------------        ---------------------------------------
+%%             |                  |                     /     |                     \
+%% _G1 = dobby |                  |     _G1 = hermione /      | _G1 = 'McGonagall'   \ _G1 = rita_skeeter
+%%             |                  |                   /       |                       \
+%%           -----                X                -----    -----                    -----
+%%           |   |                                 |   |    |   |                    |   |
+%%           -----                                 -----    -----                    -----
+
+%% Exercise 2.3 Here is a tiny lexicon and mini grammar with only one rule which
+%% defines a sentence as consisting of five words: an article, a noun, a verb,
+%% and again an article and a noun.
+
+word(article,a).
+word(article,every).
+word(noun,criminal).
+word(noun,'big kahuna burger').
+word(verb,eats).
+word(verb,likes).
+
+sentence(Word1,Word2,Word3,Word4,Word5) :-
+  word(article,Word1),
+  word(noun,Word2),
+  word(verb,Word3),
+  word(article,Word4),
+  word(noun,Word5).
+
+%% What query do you have to pose in order to find out which sentences the
+%% grammar can generate? List all sentences that this grammar can generate in
+%% the order Prolog will generate them. Make sure that you understand why Prolog
+%% generates them in this order.
+
+%% ?- sentence(A, B, C, D, E). -> generates all possibilities:
+%% e.g. the following is the first possibility since it uses all the first
+%% examples of article, noun, verb listed.
+%% A = a,
+%% B = criminal,
+%% C = eats,
+%% D = a,
+%% E = criminal ;
+
+%% Exercise 2.4
+%% Here are six English words:
+%% abalone, abandon, anagram, connect, elegant, enhance.
+%% They are to be arranged in a crossword puzzle like fashion in the grid given
+%% below.
+%%     V1V2V3
+%%     _ _ _
+%% H1 _______
+%%     _ _ _
+%% H2 _______
+%%     _ _ _
+%% H3 _______
+%%     _ _ _
+
+
+%% The following knowledge base represents a lexicon containing these words.
+word(abalone,a,b,a,l,o,n,e).
+word(abandon,a,b,a,n,d,o,n).
+word(enhance,e,n,h,a,n,c,e).
+word(anagram,a,n,a,g,r,a,m).
+word(connect,c,o,n,n,e,c,t).
+word(elegant,e,l,e,g,a,n,t).
+
+%% Write a predicate crosswd/6 that tells us how to fill the grid, i.e. the
+%% first three arguments should be the vertical words from left to right and the
+%% following three arguments the horizontal words from top to bottom.
+
+crossword(V1,V2,V3,H1,H2,H3) :-
+  %% Make the word intersect at the right places.
+  %% Use _ where we don't give a fuck about variable name.
+  word(H1,_,H12V12,_,H14V22,_,H16V32,_),
+  word(H2,_,H22V14,_,H24V24,_,H26V34,_),
+  word(H3,_,H32V16,_,H34V26,_,H36V36,_),
+
+  word(V1,_,H12V12,_,H22V14,_,H32V16,_),
+  word(V2,_,H14V22,_,H24V24,_,H34V26,_),
+  word(V3,_,H16V32,_,H26V34,_,H36V36,_)
+.
+
+%% ?- crosswd(H1,H2,H3,V1,V2,V3). ->
+%% H1 = abandon, H2 = elegant, H3 = enhance, V1 = abalone, V2 = anagram,
+%% V3 = connect ;
+%% H1 = abalone, H2 = anagram, H3 = connect, V1 = abandon, V2 = elegant,
+%% V3 = enhance ;
+%% false.
+
+%% Chapter 3 - Exercises
+
+%% Exercise 3.1
+%% Do you know these wooden Russian dolls, where smaller ones are contained in
+%% bigger ones? Here is schematic picture of such dolls.
+%% from outer to inner doll: katarina -> olga -> natsha -> irina.
+%% First, write a knowledge base using the predicate directlyIn/2 which encodes
+%% which doll is directly contained in which other doll. Then, define a
+%% (recursive) predicate in/2, that tells us which doll is (directly or
+%% indirectly) contained in which other doll. E.g. the query
+%% in(katarina,natasha) should evaluate to true, while in(olga, katarina) should
+%% fail.
+
+directlyIn(katarina, olga).
+directlyIn(olga, natasha).
+directlyIn(natasha, irina).
+
+in(X,Y) :- directlyIn(X,Y).
+in(X,Y) :-
+  directlyIn(X,Z),
+  in(Z,Y).
+
+%% Exercise 3.2
+%% Define a predicate greater_than/2 that takes two numerals in the notation
+%% that we introduced in this lecture (i.e. 0, succ(0), succ(succ(0)) ...) as
+%% arguments and decides whether the first one is greater than the second
+%% one. E.g:
+%% ?- greater_than(succ(succ(succ(0))),succ(0)). -> true
+%% ?- greater_than(succ(succ(0)),succ(succ(succ(0)))). -> no
+
+greater_than(succ(_),0).
+greater_than(succ(X),succ(Y)) :-
+  greater_than(X,Y).
+
+%% Exercise 3.3
+%% Binary trees are trees where all internal nodes have exactly two childres. The
+%% smallest binary trees consist of only one leaf node. We will represent leaf
+%% nodes as leaf(Label). For instance, leaf(3) and leaf(7) are leaf nodes, and
+%% therefore small binary trees. Given two binary trees B1 and B2 we can combine
+%% them into one binary tree using the predicate tree: tree(B1,B2). So, from the
+%% leaves leaf(1) and leaf(2) we can build the binary tree tree(leaf(1),
+%% leaf(2)). And from the binary trees tree(leaf(1), leaf(2)) and leaf(4) we can
+%% build the binary tree tree(tree(leaf(1), leaf(2)), leaf(4)).
+
+%% Now, define a predicate swap/2, which produces a mirror image of the binary
+%% tree that is its first argument. For example:
+%% ?- swap(tree(tree(leaf(1), leaf(2)), leaf(4)),T).
+%% T = tree(leaf(4), tree(leaf(2), leaf(1))).
+%% true
+
+swap(leaf(X), leaf(X)).
+
+swap(tree(X, Y), tree(SwappedY, SwappedX)) :-
+    swap(X, SwappedX),
+    swap(Y, SwappedY).
+
+%% Exercise 3.4
+%% In the lecture, we saw the predicate
+%% descend(X,Y) :- child(X,Y).
+%% descend(X,Y) :- child(X,Z),
+%%                 descend(Z,Y).
+%% Could we have formulated this predicate as follows?
+%% descend(X,Y) :- child(X,Y).
+%% descend(X,Y) :- descend(X,Z),
+%%                 descend(Z,Y).
+
+%% Compare the declarative and the procedural meaning of this predicate
+%% definition.
+%% Hint: What happens when you ask the query descend(rose,martha)?
+
+%% Declarative: true if Y is a direct child of X. True if there exists a Z which
+%% Y descends and Z descends X.
+
+%% Procedural: If Y is not a child of X, see if any of X's descendants have Y as
+%% a descendant.
+
+%% In all false cases it will loop forever (Out of local stack).
+%% E.g. when calling descend(rose, martha). it will keep doing the following:
+
+%% Call: descend(rose, _G408) ?
+%% Call: child(rose, _G408) ?
+%% Fail: child(rose, _G408) ?
+%% Redo: descend(rose, _G408) ?
+
+%% Exercise 3.5
+%% We have the following knowledge base:
+
+directTrain(nancy,metz).
+directTrain(metz,fahlquemont).
+directTrain(fahlquemont,stAvold).
+directTrain(stAvold,forbach).
+directTrain(forbach,saarbruecken).
+directTrain(saarbruecken,dudweiler).
+directTrain(freyming,forbach).
+
+%% That is, this knowledge base holds facts about towns it is possible to travel
+%% between by taking a direct train. But of course, we can travel further by
+%% `chaining together' direct train journeys. Write a recursive predicate
+%% travelBetween/2 that tells us when we can travel by train between two
+%% towns. For example, when given the query
+%% travelBetween(nancy,saarbruecken).
+%% it should reply `yes'.
+
+travelBetween(X,Y) :- directTrain(X,Y).
+travelBetween(X,Y) :-
+  directTrain(X,Z),
+  travelBetween(Z,Y).
+
+%% It is, furthermore, plausible to assume that whenever it is possible to take
+%% a direct train from A to B, it is also possible to take a direct train from B
+%% to A. Can you encode this in Prolog? You program should e.g. answer `yes' to
+%% the following query:
+%% travelBetween(saarbruecken,nancy).
+%% Do you see any problems you program may run into?
+
+travelBetween(X,Y) :- directTrain(X,Y).
+travelBetween(X,Y) :- directTrain(Y,X).
+travelBetween(X,Y) :-
+  directTrain(X,Z),
+  travelBetween(Z,Y).
+travelBetween(X,Y) :-
+  directTrain(Z,X),
+  travelBetween(Z, Y).
+
+%% You will end up in infinite loops since you can go both directions, so it is
+%% possible to keep calling the same function over and over.
+
+%% Chapter 4 - Exercises
+
+% Exercise 4.1
+%% How does Prolog respond to the following queries?
+
+%% [a,b,c,d] = [a,[b,c,d]]. -> false
+%% [a,b,c,d] = [a|[b,c,d]]. -> true
+%% [a,b,c,d] = [a,b,[c,d]]. -> false
+%% [a,b,c,d] = [a,b|[c,d]]. -> true
+%% [a,b,c,d] = [a,b,c,[d]]. -> false
+%% [a,b,c,d] = [a,b,c|[d]]. -> true
+%% [a,b,c,d] = [a,b,c,d,[]]. -> false
+%% [a,b,c,d] = [a,b,c,d|[]]. -> true
+%% [] = _. -> true
+%% [] = [_]. -> false
+%% [] = [_|[]]. -> false
+
+%%Exercise  4.2 Which of the following are syntactically correct lists? 
+%%If the representation is correct, how many elements does the list have?
+
+%%[1|[2,3,4]]               correct - 4 elements 
+%%[1,2,3|[]]                correct - 3 elements
+%%[1|2,3,4]                 syntactically incorrect
+%%[1|[2|[3|[4]]]]           correct - 4 elements
+%%[1,2,3,4|[]]              correct - 4 elements
+%%[[]|[]]                   correct - 1 element
+%%[[1,2]|4]                 syntactically incorrect
+%%[[1,2],[3,4]|[5,6,7]]     correct - 5 elements
+
+%%Exercise  4.3 Write a predicate second(X,List) which checks whether X is the second element of List .
+second(X,List) :- List = [_,X|_].
+
+%%4.4 Write a predicate swap12(List1,List2) which checks whether List1 is identical to List2 ,
+%%except that the first two elements are exchanged.
+
+swap12(L1,L2) :- L1 = [L1a,L1b|T], L2 = [L1b,L1a|T].
+
+%% Exercise 4.5
+%% Suppose we are given a knowledge base with the following facts:
+
+tran(eins,one).
+tran(zwei,two).
+tran(drei,three).
+tran(vier,four).
+tran(fuenf,five).
+tran(sechs,six).
+tran(sieben,seven).
+tran(acht,eight).
+tran(neun,nine).
+
+%% Write a predicate listtran(G,E) which translates a list of German number
+%% words to the corresponding list of English number words. For example:
+
+%% listtran([eins,neun,zwei],X).
+%% should give:
+%% X = [one,nine,two].
+
+%% Your program should also work in the other direction. For example, if you
+%% give it the query
+
+%% listtran(X,[one,seven,six,two]).
+%% it should return:
+%% X = [eins,sieben,sechs,zwei].
+
+%% Hint: to answer this question, first ask yourself `How do I translate the
+%% empty list of number words?'. That's the base case. For non-empty lists,
+%% first translate the head of the list, then use recursion to translate the
+%% tail.
+
+listtran([], []).
+listtran([Hg | Tg], [He | Te]) :-
+  tran(Hg, He),
+  listtran(Tg, Te).
+
+%% Exercise 4.6
+
+%% Write a predicate twice(In,Out) whose left argument is a list, and whose
+%% right argument is a list consisting of every element in the left list written
+%% twice. For example, the query
+%% twice([a,4,buggle],X).
+%% should return
+%% X = [a,a,4,4,buggle,buggle]).
+%% And the query
+%% twice([1,2,1,1],X).
+%% should return
+%% X = [1,1,2,2,1,1,1,1].
+
+%% Hint: to answer this question, first ask yourself
+%% `What should happen when the first argument is the empty list?'. That's the
+%% base case. For non-empty lists, think about what you should do with the head,
+%% and use recursion to handle the tail.
+
+twice([],[]).
+twice([Ha | Ta], [Ha, Ha | Tb]) :- twice(Ta, Tb).
+
+%% Exercise 4.7
+%% Draw the search trees for the following three queries:
+
+%% ?- member(a,[c,b,a,y]).
+
+%% ------------------------------
+%% | ?- member(a, [c, b, a, y]) |
+%% ------------------------------
+%%               |
+%%               |
+%% ------------------------------
+%% | ?- member(a, [b, a, y])    |
+%% ------------------------------
+%%               |
+%%               |
+%% ------------------------------
+%% | ?- member(a, [a, y])       |
+%% ------------------------------
+%%               |
+%%               |
+%% ------------------------------
+%% |                            |
+%% ------------------------------
+
+%% ?- member(x,[a,b,c]).
+
+%% ---------------------------
+%% | ?- member(x, [a, b, c]) |
+%% ---------------------------
+%%              |
+%%              |
+%% ---------------------------
+%% | ?- member(x, [b, c])    |
+%% ---------------------------
+%%              |
+%%              |
+%% ---------------------------
+%% | ?- member(x, [c])       |
+%% ---------------------------
+%%              |
+%%              |
+%% ---------------------------
+%% | ?- member(x, [])        |
+%% ---------------------------
+%%              |
+%%              X
+
+%% ?- member(X,[a,b,c]).
+
+%%                ---------------------------
+%%                | ?- member(X, [a, b, c]) |
+%%                ---------------------------
+%%                    /                 \
+%%          X = a    /                   \    X = _G1
+%%                  /                     \
+%% ---------------------------   ---------------------------
+%% |                         |   | ?- memeber(_G1, [b, c]) |
+%% ---------------------------   ---------------------------
+%%                                   /                 \
+%%                       _G1 = b    /                   \
+%%                                 /                     \
+%%                ---------------------------   ---------------------------
+%%                |                         |   | ?- member(_G1, [c])     |
+%%                ---------------------------   ---------------------------
+%%                                                  /                 \
+%%                                      _G1 = c    /                   \
+%%                                                /                     \
+%%                               ---------------------------   ---------------------------
+%%                               |                         |   | ?- member(_G1, [])      |
+%%                               ---------------------------   ---------------------------
+%%                                                                          |
+%%                                                                          X
+
+%% Chapter 5 - Exercises
+
+%% Exercise 5.1
+
+%% How does Prolog respond to the following queries?
+%% X = 3 * 4. -> X = 3*4.
+%% X is 3*4. -> X = 12.
+%% 4 is X. -> ERROR: is/2: Arguments are not sufficiently instantiated
+%% X = Y. -> X = Y.
+%% 3 is 1+2. -> true.
+%% 3 is +(1,2). -> true.
+%% 3 is X+2. -> ERROR: is/2: Arguments are not sufficiently instantiated
+%% X is 1+2. -> X = 3.
+%% 1+2 is 1+2. -> false.
+%% is(X,+(1,2)). -> X = 3.
+%% 3+2 = +(3,2). -> true.
+%% *(7,5) = 7*5. -> true.
+%% *(7,+(3,2)) = 7*(3+2). -> true.
+%% *(7,(3+2)) = 7*(3+2). -> true.
+%% *(7,(3+2)) = 7*(+(3,2)). -> true.
+
+%% Exercise 5.2
+
+%% 1. Define a 2-place predicate increment that holds only when its second
+%% argument is an integer one larger than its first argument. For example,
+%% increment(4,5) should hold, but increment(4,6) should not.
+
+increment(X,Y) :- Y is X + 1.
+
+%% ?- increment(4,5). -> true
+%% ?- increment(4,6). -> false
+%% ?- increment(4,X). -> X = 5.
+
+%% 2. Define a 3-place predicate sum that holds only when its third argument is
+%% the sum of the first two arguments. For example, sum(4,5,9) should hold, but
+%% sum(4,6,12)should not.
+
+sum(X,Y,Z) :- Z is (X + Y).
+
+%% ?- sum(4,5,9). -> true.
+%% ?- sum(4,6,12). -> false.
+
+%% Exercise 5.3
+
+%% Write a predicate addone/2 whose first argument is a list of integers, and
+%% whose second argument is the list of integers obtained by adding 1 to each
+%% integer in the first list. For example, the query
+
+%% addone([1,2,7,2],X).
+%% should give
+%% X = [2,3,8,3].
+
+addone([],[]).
+addone([H1|T1], [H2|T2]) :-
+  is(H2,+(H1,1)),
+  addone(T1,T2).
+
+%% ?- addone([1,2,7,2],X).
+%% X = [2, 3, 8, 3].]
+
+%% Chapter 6 - Exercises
+
+%% Exercise 6.1
+
+%% Let's call a list doubled if it is made of two consecutive blocks of elements
+%% that are exactly the same. For example, [a,b,c,a,b,c] is doubled (it's made
+%% up of [a,b,c]followed by [a,b,c]) and so is [foo,gubble,foo,gubble]. On the
+%% other hand, [foo,gubble,foo] is not doubled. Write a predicate doubled(List)
+%% which succeeds when List is a doubled list.
+
+
+
+%% doubled
+doubled(List) :- append(X, X, List).
+
+%% Exercise 6.2
+
+%% A palindrome is a word or phrase that spells the same forwards and
+%% backwards. For example, `rotator', `eve', and `nurses run' are all
+%% palindromes. Write a predicate palindrome(List), which checks whether List is
+%% a palindrome. For example, to the queries
+
+%% ?- palindrome([r,o,t,a,t,o,r]).
+%% and
+%% ?- palindrome([n,u,r,s,e,s,r,u,n]).
+%% Prolog should respond `yes', but to the query
+%% ?- palindrome([n,o,t,h,i,s]).
+%% Prolog should respond `no'.
+
+%% Helper functions
+
+%% reverse
+%% base case
+accRev([],A,A).
+%% inductive case
+accRev([H|T],A,R) :- accRev(T,[H|A],R).
+%% main
+rev(L,R) :- accRev(L,[],R).
+
+%% Actual function
+
+%% palindrome
+%% main
+palindrome(List) :-
+  rev(List, List).
+
+%% Exercise 6.3
+
+%% 1. Write a predicate second(X,List) which checks whether X is the second
+%% element of List.
+
+second(X, [Y, X | List]).
+
+%% 2. Write a predicate swap12(List1,List2) which checks whether List1 is
+%% identical to List2, except that the first two elements are exchanged.
+
+
+%% Actual function
+swap12([],[]).
+swap12([X, Y | List], [Y, X | List]).
+
+%% 3. Write a predicate final(X,List) which checks whether X is the last element
+%% of List.
+
+final(X, List) :- append(_, [X], List).
+
+%% 4. Write a predicate toptail(InList,Outlist) which says `no' if inlist is a
+%% list containing fewer than 2 elements, and which deletes the first and the
+%% last elements of Inlist and returns the result as Outlist, when Inlist is a
+%% list containing at least 2 elements. For example:
+
+%% toptail([a],T).
+%% no
+
+%% toptail([a,b],T).
+%% T=[]
+
+%% toptail([a,b,c],T).
+%% T=[b]
+
+%% Hint: here's where append comes in useful.
+
+toptail(InList, OutList):-
+    append([_|OutList],[_], InList).
+    
+%% Version without append
+toptail2([_|Tail], OutList):- reverse(Tail, [_|TailReversedRest]), reverse(TailReversedRest, OutList).
+
+%% 5. Write a predicate swapfl(List1,List2) which checks whether List1 is
+%% identical to List2, except that the first and last elements are
+%% exchanged. Hint: here's where append comes in useful again.
+
+swapfl([], []).
+swapfl([First1|Tail1], [First2|Tail2]):-
+	reverse(Tail1, [Last1|Rest1]),
+	reverse(Tail2, [Last2|Rest2]),
+	First1 = Last2,
+	Last1 = First2,
+	Rest1 = Rest2.
+
+%% Exercise 6.4
+
+%% And here is an exercise for those of you who, like me, like logic puzzles.
+
+%% There is a street with three neighboring houses that all have a different
+%% color. They are red, blue, and green. People of different nationalities live
+%% in the different houses and they all have a different pet. Here are some more
+%% facts about them:
+
+%% The Englishman lives in the red house.
+%% The jaguar is the pet of the Spanish family.
+%% The Japanese lives to the right of the snail keeper.
+%% The snail keeper lives to the left of the blue house.
+%% Who keeps the zebra?
+
+%% Define a predicate zebra/1 that tells you the nationality of the owner of the
+%% zebra.
+
+%% Hint: Think of a representation for the houses and the street. Code the four
+%% constraints in Prolog. member and sublist might be useful predicates.
+
+%% I believe this is the correct answer:
+%% (green, Japanese, zebra) | (red, English, snail) | (blue, Spanish, jaguar)
+
+prefix(P,L) :- append(P,_,L).
+suffix(S,L) :- append(_,S,L).
+sublist(SubL,L) :- suffix(S,L), prefix(SubL,S).
+
+zebra_owner(ZebraOwner) :-
+    Street = [_, _, _],
+    member(house(red, englishman, _), Street),
+    member(house(_, spanish, jaguar), Street),
+    member(house(_, ZebraOwner, zebra), Street),
+    sublist([house(_, _, snail), house(_, japanese, _)], Street),
+    sublist([house(_, _, snail), house(blue, _, _)], Street).
+
+%% Chapter 7 - Exercises
+
+%% Exercise 7.1
+%% Suppose we are working with the following DCG:
+
+s --> foo,bar,wiggle.
+foo --> [choo].
+foo --> foo,foo.
+bar --> mar,zar.
+mar --> me,my.
+me --> [i].
+my --> [am].
+zar --> blar,car.
+blar --> [a].
+car --> [train].
+wiggle --> [toot].
+wiggle --> wiggle,wiggle.
+%% Write down the ordinary Prolog rules that correspond to these DCG rules.
+
+%% s --> foo, bar, wiggle.
+s(A, D) :-
+    foo(A, B),
+    bar(B, C),
+    wiggle(C, D).
+
+%% foo --> [choo].
+foo([choo | A], A).
+
+%% foo --> foo, foo.
+foo(A, C) :-
+    foo(A, B),
+    foo(B, C).
+
+%% bar --> mar, zar.
+bar(A, C) :-
+    mar(A, B),
+    zar(B, C).
+
+%% mar --> me, my.
+mar(A, C) :-
+    me(A, B),
+    my(B, C).
+
+%% me --> [i].
+me([i | A], A).
+
+%% my --> [am].
+my([am | A], A).
+
+%% zar -> blar, car.
+zar(A, C) :-
+    blar(A, B),
+    car(B, C).
+
+%% blar -> [a].
+blar([a | A], A).
+
+%% car --> [train].
+car([train | A], A).
+
+%% wiggle --> [toot].
+wiggle([toot | A], A).
+
+%% wiggle --> wiggle, wiggle.
+wiggle(A, C) :-
+    wiggle(A, B),
+    wiggle(B, C).
+
+%% What are the first three responses that Prolog gives to the query s(X,[])?
+%% ?- s(X,[]).
+%% X = [choo, i, am, a, train, toot] ;
+%% X = [choo, i, am, a, train, toot, toot] ;
+%% X = [choo, i, am, a, train, toot, toot, toot] ;
+%% ...
+
+%% Exercise 7.2
+
+%% The formal language a^n b^n - {\epsilon} consists of all the strings in a^n
+%% b^n except the empty string. Write a DCG that generates this language.
+
+%% nonterminals
+s --> l,r.
+s --> l,s,r.
+
+%% terminals
+l --> [a].
+r --> [b].
+
+%% Exercise 7.3
+
+%% Let a^n b^(2n) be the formal language which contains all strings of the
+%% following form: an unbroken block of as of length n followed by an unbroken
+%% block of bs of length 2n, and nothing else. For example, abb, aabbbb, and
+%% aaabbbbbb belong to a^n b^(2n), and so does the empty string. Write a DCG
+%% that generates this language.
+
+%% nonterminals
+s --> [].
+s --> l,s,r,r.
+
+%% terminals
+l --> [a].
+r --> [b].
+
+%% Chapter 8 - Exercises
+
+%% Exercise 8.1
+
+%% Here's our basic DCG.
+
+s --> np,vp.
+
+np --> det,n.
+
+vp --> v,np.
+vp --> v.
+
+det --> [the].
+det --> [a].
+
+n --> [woman].
+n --> [man].
+
+v --> [shoots].
+
+
+%% Suppose we add the noun ``men'' (which is plural) and the verb
+%% ``shoot''. Then we would want a DCG which says that ``The men shoot'' is ok,
+%% `The man shoots'' is ok, ``The men shoots'' is not ok, and ``The man shoot''
+%% is not ok. Change the DCG so that it correctly handles these sentences. Use
+%% an extra argument to cope with the singular/plural distinction.
+
+%% should probably have used a variable instead of having cases for both plural
+%% and singular, stupid me.
+s --> np(plural), vp(plural).
+s --> np(singular),vp(singular).
+
+np(plural) --> det(plural),n(plural).
+np(singular) --> det(singular),n(singular).
+
+vp(plural) --> v(plural),np(_).
+vp(singular) --> v(singular),np(_).
+vp(plural) --> v(plural).
+vp(singular) --> v(singular).
+
+det(plural) --> [the].
+det(singular) --> [the].
+det(singular) --> [a].
+
+n(plural) --> [men].
+n(singular) --> [woman].
+n(singular) --> [man].
+
+v(plural) --> [shoot].
+v(singular) --> [shoots].
+
+%% ?- s([the,men,shoots],[]).
+%% false.
+
+%% ?- s([the,man,shoot],[]).
+%% false.
+
+%% ?- s([the,men,shoot],[]).
+%% true
+
+%% ?- s([the,man,shoots],[]).
+%% true
+
+%% also catches the cases "a men shoot a men" and the likes.
+
+%% Exercise 8.2
+
+%% Translate the following DCG rule into the form Prolog uses:
+
+%% kanga(V,R,Q) --> roo(V,R),jumps(Q,Q),{marsupial(V,R,Q)}.
+
+kanga(V, R, Q, A, C) :-
+    roo(V, R, A, B),
+    jumps(Q, Q, B, C),
+    marsupial(V, R, Q).
+
+%% Chapter 9 - Exercises
+
+%% Exercise 9.1
+
+%% Which of the following queries succeed, and which fail?
+
+%% ?- 12 is 2*6 -> true
+%% ?- 14 =\= 2*6 -> true
+%% ?- 14 = 2*7 -> false
+%% ?- 14 == 2*7 -> false
+%% ?- 14 \== 2*7 -> true
+%% ?- 14 =:= 2*7 -> true
+%% ?- [1,2,3|[d,e]] == [1,2,3,d,e] -> true
+%% ?- 2+3 == 3+2 -> false
+%% ?- 2+3 =:= 3+2 -> true
+%% ?- 7-2 =\= 9-2 -> true
+%% ?- p == 'p' -> true
+%% ?- p =\= 'p' -> error
+%% ?- vincent == VAR -> false.
+%% ?- vincent=VAR,VAR==vincent -> VAR = vincent.
+
+%% Exercise 9.2
+
+%% How does Prolog respond to the following queries?
+
+%% ?- .(a,.(b,.(c,[]))) = [a,b,c] -> true
+%% ?- .(a,.(b,.(c,[]))) = [a,b|[c]] -> true
+%% ?- .(.(a,[]),.(.(b,[]),.(.(c,[]),[]))) = X -> X = [[a], [b], [c]].
+%% ?- .(a,.(b,.(.(c,[]),[]))) = [a,b|[c]] -> false
+
+%% Exercise 9.3
+
+%% Write a two-place predicate termtype(+Term,?Type) that takes a term and gives
+%% back the type(s) of that term (atom, number, constant, variable etc.). The
+%% types should be given back in the order of their generality. The predicate
+%% should, e.g., behave in the following way.
+
+%% ?- termtype(Vincent,variable).
+%% yes
+
+%% ?- termtype(mia,X).
+%% X = atom ;
+%% X = constant ;
+%% X = simple_term ;
+%% X = term ;
+%% no
+
+%% ?- termtype(dead(zed),X).
+%% X = complex_term ;
+%% X = term ;
+%% no
+
+%% simple terms
+termtype(Term,atom) :-
+  atom(Term).
+termtype(Term,integer) :-
+  integer(Term).
+termtype(Term,number) :-
+  number(Term).
+termtype(Term,constant) :-
+  atomic(Term).
+termtype(Term,variable) :-
+  var(Term).
+
+%% complex term
+termtype(Term,complex_term) :-
+  nonvar(Term),
+  functor(Term,_,A),
+  A > 0.
+
+%% simple term
+termtype(Term,simple_term) :-
+  termtype(Term,variable).
+termtype(Term,simple_term) :-
+  termtype(Term,constant).
+
+%% term
+termtype(Term,term) :-
+  termtype(Term,simple_term).
+termtype(Term,term) :-
+  termtype(Term,complex_term).
+
+%% Exercise 9.4
+
+%% Write a program that defines the predicate groundterm(+Term) which tests
+%% whether Term is a ground term. Ground terms are terms that don't contain
+%% variables. Here are examples of how the predicate should behave:
+
+%% ?- groundterm(X).
+%% no
+
+%% ?- groundterm(french(bic_mac,le_bic_mac)).
+%% yes
+
+%% ?- groundterm(french(whopper,X)).
+%% no
+
+%% convert complex term to list of its arguments and run through list and check
+%% if each element is also a groundterm.
+
+groundterm(Term) :-
+  nonvar(Term),
+  Term =.. [_ | X],
+  groundterm_in_list(X).
+
+groundterm_in_list([H|T]) :-
+  groundterm(H),
+  groundterm_in_list(T).
+
+groundterm_in_list([]).
+
+%% Exercise 9.5
+
+%% Assume that we have the following operator definitions.
+
+:- op(300, xfx, [are, is_a]).
+:- op(300, fx, likes).
+:- op(200, xfy, and).
+:- op(100, fy, famous).
+
+%% Which of the following is a wellformed term? What is the main operator? Give the bracketing.
+
+%% ?- X is_a witch. -> true.
+%% ?- harry and ron and hermione are friends. -> true
+%% ?- harry is_a wizard and likes quidditch. -> false
+%% ?- dumbledore is_a famous famous wizard. -> true
+
+%% is_a(X, witch).
+%% are(and(harry, and(ron, hermione)), friends).
+%% is_a(dumbledore, famous(famous(wizard))).
+
+%% Chapter 10 - Exercises
+
+%% Exercise 10.1 - Suppose we have the following database:
+
+p(1).
+p(2) :- !.
+p(3).
+
+%% Write all of Prolog’s answers to the following queries:
+
+%% ?-  p(X).
+%% X = 1 ;
+%% X = 2.
+
+%% ?-  p(X),p(Y).
+%% X = Y, Y = 1 ;
+%% X = 1,
+%% Y = 2 ;
+%% X = 2,
+%% Y = 1 ;
+%% X = Y, Y = 2.
+
+%% ?-  p(X),!,p(Y).
+%% X = Y, Y = 1 ;
+%% X = 1,
+%% Y = 2.
+
+%% Exercise 10.2 First, explain what the following program does:
+
+class(Number, positive) :- Number > 0.
+class(0, zero).
+class(Number, negative) :- Number < 0.
+
+%% This program examines whether the specified Number is positive, zero, or
+%% negative.
+
+%% Second, improve it by adding green cuts.
+class(Number, positive) :- Number > 0, !.
+class(0, zero) :- !.
+class(Number, negative) :- Number < 0, !.
+
+%% If we let the second argument be a variable, we stop as soon as we have either
+%% determined that Number is positive, zero or negative and don't try the other
+%% possibilities after we've gotten _one_ positive result.
+
+%% Exercise 10.3 - Without using cut, write a predicate split/3 that splits a
+%% list of integers into two lists: one containing the positive ones (and zero),
+%% the other containing the negative ones. For example:
+
+%% split([3,4,-5,-1,0,4,-9],P,N)
+%% should return:
+
+%% P = [3,4,0,4].
+%% N = [-5,-1,-9].
+
+split([], [], []).
+
+split([HP | TL], [HP | TP], N) :-
+  HP >= 0,
+  split(TL, TP, N).
+
+split([HN | TL], P, [HN | TN]) :-
+  HN < 0,
+  split(TL, P, TN).
+
+%% Then improve this program, without changing its meaning, with the help of the
+%% cut.
+
+split([], [], []).
+
+split([HP | TL], [HP | TP], N) :-
+  HP >= 0, !, % green cut
+  split(TL, TP, N).
+
+split([HN | TL], P, [HN | TN]) :-
+  HN < 0, !, % green cut
+  split(TL, P, TN).
+
+%% Note, if you use split to check if P or N is contained in L, the items have
+%% to be ordered the same way as in L.
+
+%% Exercise 10.4
+%% Recall that in Exercise 3.3 we gave you the following knowledge base:
+
+directTrain(saarbruecken, dudweiler).
+directTrain(forbach, saarbruecken).
+directTrain(freyming, forbach).
+directTrain(stAvold, freyming).
+directTrain(fahlquemont, stAvold).
+directTrain(metz, fahlquemont).
+directTrain(nancy, metz).
+
+%% We asked you to write a recursive predicate travelFromTo/2 that told us when
+%% we could travel by train between two towns.
+
+%% Now, it’s plausible to assume that whenever it is possible to take a direct
+%% train from A to B, it is also possible to take a direct train from B to
+%% A. Add this information to the database. Then write a predicate route/3 which
+%% gives you a list of towns that are visited by taking the train from one town
+%% to another. For instance:
+
+%% ?- route(forbach,metz,Route).
+%% Route = [forbach,freyming,stAvold,fahlquemont,metz].
+
+directPath(X, Y) :-
+    directTrain(X, Y).
+
+directPath(X, Y) :-
+    directTrain(Y, X),!.
+
+%% base case
+route(Y, Y, RevL, L) :-
+    reverse(RevL, L).
+
+%% inductive case
+route(X, Y, RevL, L) :-
+    directPath(X, Z),
+    not(member(Z, RevL)),
+    route(Z, Y, [Z | RevL], L).
+
+%% main
+route(X, Y, L) :-
+    route(X, Y, [X], L).
+
+%% Chapter 11 - Exercises
+
+%% Exercise 11.1 Suppose we start with an empty database. We then give the
+%% command:
+
+assert(q(a,b)),  assertz(q(1,2)),  asserta(q(foo,blug)).
+
+%% What does the database now contain?
+q(foo,blug).
+q(a,b).
+q(1,2).
+
+%5 We then give the command:
+retract(q(1, 2)), assertz( (p(X) :- h(X)) ).
+
+%% What does the database now contain?
+q(foo,blug).
+q(a,b).
+
+:- dynamic p/1.
+
+p(A) :- h(A).
+
+%% We then give the command:
+retractall(q(_,_)).
+
+%% What does the database now contain?
+p(A) :- h(A).
+
+%% Exercise  11.2 Suppose we have the following database:
+
+q(blob,blug).
+q(blob,blag).
+q(blob,blig).
+q(blaf,blag).
+q(dang,dong).
+q(dang,blug).
+q(flab,blob).
+
+%% What is Prolog’s response to the queries:
+
+%% ?- findall(X,q(blob,X),List).
+%% List = [blug, blag, blig].
+
+%% ?- findall(X,q(X,blug),List).
+%% List = [blob, dang].
+
+%% findall(X,q(X,Y),List).
+%% List = [blob, blob, blob, blaf, dang, dang, flab].
+
+%% ?- bagof(X,q(X,Y),List).
+%% Y = blag,
+%% List = [blob, blaf] ;
+%% Y = blig,
+%% List = [blob] ;
+%% Y = blob,
+%% List = [flab] ;
+%% Y = blug,
+%% List = [blob, dang] ;
+%% Y = dong,
+%% List = [dang].
+
+%% ?- setof(X,Y^q(X,Y),List).
+%% List = [blaf, blob, dang, flab].
+
+%% Exercise  11.3 Write a predicate sigma/2 that takes an integer n > 0 and
+%% calculates the sum of all integers from 1 to n. For example:
+
+%% ?-  sigma(3,X).
+%% X  =  6
+%% yes
+
+%% ?-  sigma(5,X).
+%% X  =  15
+%% yes
+
+%% Write the predicate so that results are stored in the database (there should
+%% never be more than one entry in the database for each value) and are reused
+%% whenever possible. For example, suppose we make the following query:
+
+%% ?-  sigma(2,X).
+%% X  =  3
+%% yes
+
+%% ?-  listing.
+%% sigmares(2,3).
+%% Then, if we go on to ask
+
+%% ?-  sigma(3,X).
+
+%% Prolog should not calculate everything new, but should get the result for
+%% sigma(2,3) from the database and only add 3 to that. It should then answer:
+
+%% X  =  6
+%% yes
+%% ?-  listing.
+%% sigmares(2,3).
+%% sigmares(3,6).
+
+%% base case
+mySigma(0, Sum, Sum) :-
+    !.
+
+mySigma(N, Acc, Sum) :-
+    sigmares(N, NewSum),
+    Sum is Acc + NewSum,
+    !.
+
+%% inductive case
+mySigma(N, Acc, Sum) :-
+  is(DecN, -(N, 1)),
+  is(NewAcc, +(Acc, N)),
+  mySigma(DecN, NewAcc, Sum).
+
+%% main
+:- dynamic sigmares/2.
+
+sigma(N, Sum) :- sigmares(N, Sum), !.
+
+sigma(N, Sum) :- mySigma(N, 0, Sum),
+  assert( sigmares(N, Sum) ).
+
+%% Chapter 12 - Exercises
+
+%% Exercise 12.1 Write code that creates hogwart.houses, a file that that looks
+%% like this:
+
+%%           gryffindor
+%% hufflepuff          ravenclaw
+%%             slytherin
+
+%% You can use the built-in predicates open/3 , close/1 , tab/2 , nl/1 , and
+%% write/2 .
+
+writeHouses :-
+  open('hogwarts.houses', write, Stream),
+  tab(Stream, 10), write(Stream, 'gryffindor'),
+  nl(Stream),
+  write(Stream, 'hufflepuff'), tab(Stream, 10), write(Stream, 'ravenclaw'),
+  nl(Stream),
+  tab(Stream, 10), write(Stream, 'slytherin'),
+  close(Stream).
+
+%% Exercise 12.2 Write a Prolog program that reads in a plain text file word by
+%% word, and asserts all read words and their frequency into the Prolog
+%% database. You may use the predicate readWord/2 to read in words. Use a
+%% dynamic predicate word/2 to store the words, where the first argument is a
+%% word, and the second argument is the frequency of that word.
+
+:- dynamic word/2.
+
+addWordToDatabase(W) :-
+  word(W, X),
+  retract(word(W, X)),
+  Y is X + 1,
+  assert( word(W, Y) ), !.
+
+addWordToDatabase(W) :-
+  assert( word(W, 1) ), !.
+
+readPlainText(X) :-
+  open(X, read, Stream),
+  readWords(Stream),
+  close(Stream).
+
+readWords(InStream) :-
+  \+ at_end_of_stream(InStream),
+  readWord(InStream, W),
+  write(W), nl,
+  addWordToDatabase(W),
+  readWords(InStream).
+
+readWord(InStream, W) :-
+  get_code(InStream, Char),
+  checkCharAndReadRest(Char, Chars, InStream),
+  atom_codes(W, Chars).
+
+checkCharAndReadRest(10, [], _) :- !.
+
+checkCharAndReadRest(32, [], _) :- !.
+
+checkCharAndReadRest(-1, [], _) :- !.
+
+checkCharAndReadRest(end_of_file, [], _) :- !.
+
+checkCharAndReadRest(Char, [Char | Chars] , InStream) :-
+  get_code(InStream, NextChar),
+  checkCharAndReadRest(NextChar, Chars, InStream).
+
+%% ?- readPlainText('foo.txt').
+%% foo
+%% bar
+%% baz
+%% bozz
+%% newline
+%% bozz
+%% bar
+%% baz
+%% foo
+%% end
+%% of
+%% file
+%% false.
+
+%% partial output from ?- listing.
+word(newline, 1).
+word(bozz, 2).
+word(bar, 2).
+word(baz, 2).
+word(foo, 2).
+word(end, 1).
+word(of, 1).
+word(file, 1).
